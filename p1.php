@@ -13,12 +13,20 @@ try {
     // Error mode set করা
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    //single data insert with placeholder prepare
-    $name="omar";
-    $email="omar@gmail.com";
+    //multiple data insert with placeholder prepare
+    $persons=[
+        ["name"=>"per1", "email"=>"per1@gmail.com"],
+        ["name"=>"per2", "email"=>"per2@gmail.com"],
+        ["name"=>"per3", "email"=>"per3@gmail.com"],
+        ["name"=>"per4", "email"=>"per4@gmail.com"],
+
+    ];
+
     $sql= "INSERT INTO testtable(name,email) VALUES(:name, :email)";
     $statement= $pdo->prepare($sql);
-    $statement->execute([':name'=>$name, ":email"=>$email]);
+    foreach($persons as $person){
+        $statement->execute($person);
+    }
     
     echo "data added successfully";
 
