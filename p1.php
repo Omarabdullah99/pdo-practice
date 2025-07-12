@@ -12,8 +12,15 @@ try {
     $pdo = new PDO($dsn, $user, $password);
     // Error mode set করা
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    //single data insert with placeholder prepare
+    $name="omar";
+    $email="omar@gmail.com";
+    $sql= "INSERT INTO testtable(name,email) VALUES(:name, :email)";
+    $statement= $pdo->prepare($sql);
+    $statement->execute([':name'=>$name, ":email"=>$email]);
     
-    echo "database connect successfully";
+    echo "data added successfully";
 
 } catch (PDOException $e) {
     echo $e->getMessage();
