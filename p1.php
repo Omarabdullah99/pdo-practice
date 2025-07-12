@@ -8,27 +8,23 @@ $password = 'root';
 
 $dsn = "mysql:host=$host;port=$port;dbname=$db";
 
+function findPerson($pdo,$pattern){
+    $sql= "SELECT name, email FROM testtable WHERE name LIKE :pattern";
+    $statement= $pdo->prepare($sql);
+    $statement->execute([':pattern'=>$pattern]);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
 try {
     $pdo = new PDO($dsn, $user, $password);
     // Error mode set করা
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    //multiple data insert with placeholder prepare
-    $persons=[
-        ["name"=>"per1", "email"=>"per1@gmail.com"],
-        ["name"=>"per2", "email"=>"per2@gmail.com"],
-        ["name"=>"per3", "email"=>"per3@gmail.com"],
-        ["name"=>"per4", "email"=>"per4@gmail.com"],
+    $result= findPerson($pdo, "_mar");
 
-    ];
-
-    $sql= "INSERT INTO testtable(name,email) VALUES(:name, :email)";
-    $statement= $pdo->prepare($sql);
-    foreach($persons as $person){
-        $statement->execute($person);
+    foreach($result as $r){
+        echo $r['name'] . $r['email'] . "<br>";
     }
-    
-    echo "data added successfully";
 
 } catch (PDOException $e) {
     echo $e->getMessage();
